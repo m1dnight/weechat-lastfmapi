@@ -4,19 +4,21 @@
     author: Christophe De Troyer <christophe@call-cc.be>
       desc: Shows your last played track on last.fm.
      usage:
-       /set plugins.var.python.lastfm.username yourusername
+       /set plugins.var.python.lastfmapi.username yourusername
+       /set plugins.var.python.lastfmapi.apikey apikey
+       /set plugins.var.python.lastfmapi.command "/me is listening to %s"
        /lastfm
+
    license: GPLv3
 
    history:
        0.1 - First version
-
 """
 
 import weechat
 import feedparser
 
-weechat.register("lastfm", "Christophe De Troyer", "0.1", "GPL3", "Shows your last played track on last.fm.", "", "")
+weechat.register("lastfmapi", "Christophe De Troyer", "0.1", "GPL3", "Shows your last played track on last.fm.", "", "")
 
 defaults = {
         "username" : "yourusername",
@@ -36,7 +38,7 @@ for k, v in defaults.iteritems():
 def lastfm_cmd(data, buffer, args):
         global cmd_hook_process, cmd_buffer, cmd_stdout, cmd_stderr
         if cmd_hook_process != "":
-                weechat.prnt(buffer, "Lastfm is already running!")
+                weechat.prnt(buffer, "Lastfmapi is already running!")
                 return weechat.WEECHAT_RC_OK
         cmd_buffer = buffer
         cmd_stdout = ""
@@ -72,13 +74,14 @@ def lastfm_cmd(data, buffer, args):
                 "    last_track = parsed['recenttracks']['track'][0]\n"
                 "    title = last_track['name']\n"
                 "    artist = last_track['artist']['#text']\n"
-                "    return {'title': title, 'artist': artist}\n"x
+                "    return {'title': title, 'artist': artist}\n"
                 "    \n"
                 "data = last_or_now_playing()\n"
                 "\n"
-                "print('{0} - {1}'.format(data['title'], data['artist']))\n" % (apikey, username),
+                "print('{0} - {1}'.format(data['artist'], data['title']))\n" % (apikey, username),
                 10000, "lastfm_cb", "")
         return weechat.WEECHAT_RC_OK
+
 
 def lastfm_cb(data, command, rc, stdout, stderr):
         global cmd_hook_process, cmd_buffer, cmd_stdout, cmd_stderr
@@ -96,6 +99,7 @@ hook = weechat.hook_command(
         "lastfm",
         "Shows your last played track on last.fm. Configure first:\n\n"
         "    /set plugins.var.python.lastfmapi.username yourusername\n\n"
-        "You can also customize the command that will be sent to the buffer like this:\n\n"
-        "    /set plugins.var.python.lastfm.command Right now I'm listening to %s\n",
+        "    /set plugins.var.python.lastfmapi.apikey apikey\n\n"        
+        "The posted message is a simple string that will be formatted with 1 argument:\n\n"
+        "    /set plugins.var.python.lastfmapi.command is listening to %s\n",
         "", "", "", "lastfm_cmd", "")
