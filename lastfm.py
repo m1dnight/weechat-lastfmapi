@@ -74,11 +74,12 @@ def lastfm_cmd(data, buffer, args):
                 "    last_track = parsed['recenttracks']['track'][0]\n"
                 "    title = last_track['name']\n"
                 "    artist = last_track['artist']['#text']\n"
-                "    return {'title': title, 'artist': artist}\n"
+                "    album = last_track['album']['#text']\n"
+                "    return {'title': title, 'artist': artist, 'album': album}\n"
                 "    \n"
                 "data = last_or_now_playing()\n"
                 "\n"
-                "print('{0} - {1}'.format(data['artist'], data['title']))\n" % (apikey, username),
+                "print('{0} - {1} ({2})'.format(data['artist'], data['title'], data['album']))\n" % (apikey, username),
                 10000, "lastfm_cb", "")
         return weechat.WEECHAT_RC_OK
 
