@@ -17,12 +17,16 @@
        script uses the API (for which you need an API key) and does work at the
        time of writing.
 
+       I have based myself on the existing script but the internals are
+       completely new. So credit goes to the author of
+       https://weechat.org/scripts/source/lastfm.py.html/ for the wrapper
+       script.
+
    history:
        0.1 - First version
 """
 
 import weechat
-import feedparser
 
 weechat.register("lastfmapi", "Christophe De Troyer", "0.1", "GPL3", "Shows your last played track on last.fm.", "", "")
 
@@ -87,6 +91,7 @@ def lastfm_cmd(data, buffer, args):
                 "\n"
                 "print('{0} - {1} ({2})'.format(data['artist'], data['title'], data['album']))\n" % (apikey, username),
                 10000, "lastfm_cb", "")
+        
         return weechat.WEECHAT_RC_OK
 
 
