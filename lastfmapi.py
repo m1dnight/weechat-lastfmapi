@@ -24,6 +24,9 @@
 
    history:
        0.1 - First version
+   todo:
+       - Catch errors and properly print them to stderr.
+       - Make it optional to force now-playing only.
 """
 
 import weechat
